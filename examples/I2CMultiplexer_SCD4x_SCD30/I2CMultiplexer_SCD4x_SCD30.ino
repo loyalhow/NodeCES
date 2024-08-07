@@ -10,14 +10,6 @@ SensirionI2CScd4x scd4x;
 //Create a SCD4x object
 SensirionI2cScd30 scd30;
 
-// wifi connection
-const char* ssid = ""; //wifi id
-const char* password = ""; //password
-const char* mqttServer = "192.168.2.13";
-
-// mqtt client
-WiFiClient wifiClient;
-PubSubClient mqttClient(wifiClient);
 
 void setup()
 {
