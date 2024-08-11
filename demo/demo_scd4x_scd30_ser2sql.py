@@ -17,11 +17,10 @@ plt.rcParams['legend.facecolor'] = 'none'
 st.title('SCD4x & SCD30 Visualization')
 
 
-
 # 配置数据库连接
 db_config = {
     'user': 'fudan',  # 替换为你的数据库用户名
-    'password': '',  # 替换为你的数据库密码
+    'password': 'gE.UGOASO[WrJmcZ',  # 替换为你的数据库密码
     'host': 'localhost',
     'database': 'fudan'
 }
@@ -36,8 +35,13 @@ cursor.execute(query_id)
 sensor_ids = cursor.fetchall()
 sensor_ids = [id[0] for id in sensor_ids]  # 提取编号列表
 
+# 创建一个侧边栏
+st.sidebar.title('Options')
+
 default_sensor_ids = [0, 1, 2, 3, 4]  # 默认选择传感器ID为1、2和3
-selected_sensor_ids = st.multiselect('Select Sensor IDs', sensor_ids, default=default_sensor_ids)
+selected_sensor_ids = st.sidebar.multiselect('Select Sensor IDs', sensor_ids, default=default_sensor_ids)
+
+st.sidebar.write('')
 
 # 关闭游标
 cursor.close()
@@ -61,7 +65,9 @@ if 'datetime_value' not in st.session_state:
 
 
 # 使用 st.slider 创建一个滑动条来选择起始时间
-datetime_value = st.slider('Start Start and End Time', min_value=st.session_state.datetime_value[0], max_value=st.session_state.datetime_value[1], step=10.0, value=st.session_state.datetime_value)
+datetime_value = st.sidebar.slider('Select Start and End Time', min_value=st.session_state.datetime_value[0], max_value=st.session_state.datetime_value[1], step=10.0, value=st.session_state.datetime_value)
+
+st.sidebar.write('')
 
 start_datetime = datetime.fromtimestamp(datetime_value[0])
 end_datetime = datetime.fromtimestamp(datetime_value[1])
@@ -82,8 +88,8 @@ def download_data():
     csv = df.to_csv(index=False)
     return csv
 
-st.download_button(
-    label="Download DataFrame as CSV",
+st.sidebar.download_button(
+    label="Download Data as CSV",
     data=download_data(),
     file_name="scd4x_scd30_trial_data.csv",
     mime='text/csv'
@@ -118,7 +124,6 @@ if not df.empty:
     ax[1].set_xlim(start_datetime, end_datetime)
     ax[2].set_xlim(start_datetime, end_datetime)
 
-    
     ax[0].set_xlabel('Time',color='w')
     ax[0].set_ylabel('CO2 conc. [ppm]',color='w')
     ax[0].legend(loc='lower right', facecolor='white', edgecolor='white')
